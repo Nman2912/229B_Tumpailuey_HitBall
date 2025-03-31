@@ -15,7 +15,7 @@ public class SwordHitbox : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             canAttack = true;
-            Debug.Log("🖱️ เปิดตีได้!");
+            Debug.Log(" เปิดตีได้!");
             StartCoroutine(DisableAttackAfterDelay(attackWindow));
         }
     }
@@ -28,14 +28,14 @@ public class SwordHitbox : MonoBehaviour
 
         if (other.CompareTag("Ball"))
         {
-            Debug.Log("✅ บอลโดนดาบขณะโจมตี");
+            Debug.Log(" บอลโดนดาบขณะโจมตี");
 
             BladeBall bladeBall = other.GetComponent<BladeBall>();
             if (bladeBall != null)
             {
                 Vector3 direction = transform.parent.forward;
                 bladeBall.ReflectWithDirection(direction.normalized, reflectForce);
-                Debug.Log("⚔️ ตีบอลสำเร็จ!");
+                Debug.Log(" ตีบอลสำเร็จ!");
             }
 
             canAttack = false; // ปิดการตีทันทีหลังโดน

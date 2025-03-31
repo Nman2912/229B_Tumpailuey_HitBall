@@ -5,10 +5,11 @@ using System.Collections.Generic;
 public class BladeBall : MonoBehaviour
 {
     [Header("Ball Movement")]
-    public float speed = 10f;                 // ความเร็วเริ่มต้น
-    public float speedIncrement = 0.5f;       // ความเร็วที่เพิ่มขึ้นเมื่อสะท้อน
-    public float maxSpeed = 25f;              // ความเร็วสูงสุด
+    public float speed = 10f;
+    public float speedIncrement = 0.5f;
+    public float maxSpeed = 25f;
     public float curveStrength = 5f;
+    public float spinSpeed = 10f; //  ความเร็วการหมุนรอบตัวเอง
 
     [Header("Target")]
     public Transform target;
@@ -23,7 +24,7 @@ public class BladeBall : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
         RandomizeInitialTarget();
     }
@@ -48,6 +49,13 @@ public class BladeBall : MonoBehaviour
             initialReflectDir = curvedDir.normalized;
         }
 
+        
+        if (rb.linearVelocity.magnitude > 0.1f)
+        {
+            Vector3 spinAxis = Vector3.Cross(Vector3.up, rb.linearVelocity.normalized);
+            rb.angularVelocity = spinAxis * spinSpeed;
+        }
+
         // ป้องกันบอลจมพื้น
         if (transform.position.y < 0.1f)
         {
@@ -59,13 +67,12 @@ public class BladeBall : MonoBehaviour
 
     public void ReflectWithDirection(Vector3 direction, float force)
     {
-        // เพิ่มความเร็วทุกครั้งที่สะท้อน
         speed = Mathf.Min(speed + speedIncrement, maxSpeed);
 
         if (direction.magnitude < 0.1f)
         {
             direction = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
-            Debug.LogWarning("⚠️ ทิศทางสะท้อนต่ำเกิน → ใช้สุ่มแทน");
+            Debug.LogWarning(" ทิศทางสะท้อนต่ำเกิน → ใช้สุ่มแทน");
         }
 
         isReflected = true;
@@ -94,7 +101,7 @@ public class BladeBall : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
         transform.position = startPosition;
         isReflected = false;
-        speed = 10f; // รีเซ็ตความเร็วกลับจุดเริ่มต้น
+        speed = 10f;
         StartCoroutine(StartChaseAfterDelay(1f));
     }
 
@@ -114,7 +121,7 @@ public class BladeBall : MonoBehaviour
         {
             GameObject chosen = candidates[Random.Range(0, candidates.Count)];
             SetTarget(chosen.transform);
-            Debug.Log("🎯 สุ่มเป้าหมายเริ่ม: " + chosen.name);
+            Debug.Log(" สุ่มเป้าหมายเริ่ม: " + chosen.name);
         }
     }
 

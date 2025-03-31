@@ -16,23 +16,23 @@ public class PlayerStats : MonoBehaviour
         UpdateHearts();
     }
 
-    // Method สำหรับลด HP โดยไม่ต้องระบุค่า (ค่า default = 1)
+    
     public void TakeDamage()
     {
         TakeDamage(1f);
     }
 
-    // ลด HP ด้วยค่าความเสียหายที่รับเข้ามา
+    // ลด HP 
     public void TakeDamage(float dmg)
     {
         currentHP -= Mathf.RoundToInt(dmg);
         currentHP = Mathf.Clamp(currentHP, 0, maxHP);
-        Debug.Log("💥 Player took damage! Current HP: " + currentHP);
+        Debug.Log(" Player took damage! Current HP: " + currentHP);
         UpdateHearts();
 
         if (currentHP <= 0)
         {
-            Debug.Log("☠️ Player is dead!");
+            Debug.Log(" Player is dead!");
             // สามารถเพิ่มระบบ Game Over, Reset, หรือ Respawn ได้ที่นี่
         }
     }
